@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "190010185476",
+    "firebase_url": "https://lightcart-default-rtdb.firebaseio.com",
+    "project_id": "lightcart",
+    "storage_bucket": "lightcart.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:190010185476:android:6d28d94f1d0aa8130f2251",
+        "android_client_info": {
+          "package_name": "com.example.cheapest_item_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDZI2g-rqpV9wWrF0NqEtFte_4egCAv2N0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
