@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application
-        android:label="cheapest_item_app"
+        android:label="LightCart"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

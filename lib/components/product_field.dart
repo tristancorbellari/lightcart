@@ -91,9 +91,9 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
               contentPadding: const EdgeInsets.all(8),
               border: const OutlineInputBorder(),
               prefixIcon: Padding(
-                  padding: const EdgeInsets.fromLTRB(6, 0, 3, 1.5),
+                  padding: const EdgeInsets.fromLTRB(6, 1, 3, 0),
                   child: Text(widget.prefix,
-                      style: const TextStyle(fontSize: 16.5))),
+                      style: const TextStyle(fontSize: 16.0))),
               prefixIconConstraints:
                   const BoxConstraints(minWidth: 0, minHeight: 0),
               hintText: widget.textFieldHintText,

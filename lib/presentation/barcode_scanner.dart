@@ -34,7 +34,7 @@ class _QRViewExampleState extends State<QRViewExample> {
   }
 
   Widget _buildQrView(BuildContext context) {
-    var scanArea = 350.0;
+    var scanArea = 300.0;
     return QRView(
       key: qrKey,
       onQRViewCreated: _onQRViewCreated,
