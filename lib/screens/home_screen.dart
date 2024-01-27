@@ -151,6 +151,7 @@ class _HomeScreen extends State<HomeScreen> {
             foregroundColor: Colors.purple[800],
             backgroundColor: Colors.purple[200],
             onPressed: () async {
+              _barcode = "";
               await Navigator.of(context).push(MaterialPageRoute(
                 builder: (context) => QRViewExample(setBarcode: setBarcode),
               ));
@@ -158,14 +159,16 @@ class _HomeScreen extends State<HomeScreen> {
                 return;
               }
 
-              Navigator.push(
-                  context,
-                  buildPageWithSlideTransition(
-                      context: context,
-                      screen: ProductScreen(
-                          barcode: _barcode,
-                          setProduct: addNewProduct,
-                          setKey: setKey)));
+              if (_barcode != "") {
+                Navigator.push(
+                    context,
+                    buildPageWithSlideTransition(
+                        context: context,
+                        screen: ProductScreen(
+                            barcode: _barcode,
+                            setProduct: addNewProduct,
+                            setKey: setKey)));
+              }
             },
             child: const Icon(Icons.add),
           ),

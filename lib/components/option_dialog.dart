@@ -34,6 +34,7 @@ class OptionDialog extends StatelessWidget {
     return AlertDialog(
       title: const Text("Confirm reset"),
       content: const Text("Would you like to reset your products list?"),
+      backgroundColor: Colors.white,
       actions: [
         ElevatedButton(
             onPressed: () {
