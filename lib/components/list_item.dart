@@ -87,7 +87,7 @@ class _ListItem extends State<ListItem> {
                   ProductIcon(category: widget.category, size: 35),
                   RichText(
                     text: TextSpan(
-                        text: widget.productName,
+                        text: shortenString(widget.productName),
                         style: const TextStyle(
                             fontSize: 16, height: 1, color: Colors.black),
                         children: <TextSpan>[

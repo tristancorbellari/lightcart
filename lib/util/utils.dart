@@ -9,3 +9,11 @@ String defaultUnitOfMeasurement(String category) {
   return unitsOfMeasurement
       .elementAt(categories.indexWhere((element) => element == category));
 }
+
+String shortenString(String s) {
+  String result = s;
+  if (result.length > 23) {
+    result = "${result.substring(0, 20)}...";
+  }
+  return result;
+}
