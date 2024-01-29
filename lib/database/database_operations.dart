@@ -1,11 +1,19 @@
 import 'package:firebase_database/firebase_database.dart';
 
-void updateProduct(String key, String productName, String category,
-    String retailer, double units, String unitOfMeasurement, double price) {
+void updateProduct(
+    String key,
+    String barcode,
+    String productName,
+    String category,
+    String retailer,
+    double units,
+    String unitOfMeasurement,
+    double price) {
   DatabaseReference databaseReference =
       FirebaseDatabase.instance.ref().child('products');
 
   databaseReference.child(key).set({
+    'Barcode': barcode,
     'Name': productName,
     'Category': category,
     'Retailer': retailer,

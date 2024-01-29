@@ -1,7 +1,10 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
+import '../components/alert_widget.dart';
 import '../presentation/barcode_scanner.dart';
 import '../presentation/custom_route.dart';
+import '../presentation/loading_circle.dart';
 
 import '../components/option_dialog.dart';
 import '../components/list_item.dart';
@@ -65,24 +68,42 @@ class _HomeScreen extends State<HomeScreen> {
     //           price: 75),
   ];
 
-  final List<Text> cartItems = [];
+  void _addNewProduct(String productKey, String productName, String category,
+      String retailer, double units, String unitOfMeasurement, double price) {
+    products.insert(
+        0,
+        ListItem(
+          productKey: productKey,
+          barcode: _barcode,
+          productName: productName,
+          category: category,
+          retailer: retailer,
+          units: units,
+          unitOfMeasurement: unitOfMeasurement,
+          price: price,
+          sortProducts: sortProducts,
+        ));
+  }
 
-  void addNewProduct(String productName, String category, String retailer,
-      double units, String unitOfMeasurement, double price) {
+  void setProduct(String productKey, String productName, String category,
+      String retailer, double units, String unitOfMeasurement, double price) {
     setState(() {
-      products.insert(
-          0,
-          ListItem(
-            productKey: _key,
-            barcode: _barcode,
-            productName: productName,
-            category: category,
-            retailer: retailer,
-            units: units,
-            unitOfMeasurement: unitOfMeasurement,
-            price: price,
-            sortProducts: sortProducts,
-          ));
+      var contain =
+          products.where((element) => element.productKey == productKey);
+      if (contain.isEmpty) {
+        // Add new product
+        _addNewProduct(productKey, productName, category, retailer, units,
+            unitOfMeasurement, price);
+      } else {
+        // Update product
+        for (ListItem listItem in contain) {
+          products.removeWhere(
+              (element) => element.productKey == listItem.productKey);
+
+          _addNewProduct(productKey, productName, category, retailer, units,
+              unitOfMeasurement, price);
+        }
+      }
     });
   }
 
@@ -98,10 +119,14 @@ class _HomeScreen extends State<HomeScreen> {
         .compareTo(b.getCostPerUnitOfMeasurement()));
   }
 
-  void _clearProducts() {
+  void _clearProducts() async {
     setState(() {
       products.clear();
     });
+
+    await products.isEmpty;
+
+    showAlertWidget(context, "Product list cleared!");
   }
 
   @override
@@ -116,7 +141,7 @@ class _HomeScreen extends State<HomeScreen> {
           IconButton(
               icon: const Icon(Icons.delete),
               onPressed: () {
-                //CLEAR
+                // Clear items list
                 products.isNotEmpty
                     ? showOptionDialog(
                         context, "No", () {}, "Yes", _clearProducts)
@@ -151,6 +176,7 @@ class _HomeScreen extends State<HomeScreen> {
             foregroundColor: Colors.purple[800],
             backgroundColor: Colors.purple[200],
             onPressed: () async {
+              _key = "";
               _barcode = "";
               await Navigator.of(context).push(MaterialPageRoute(
                 builder: (context) => QRViewExample(setBarcode: setBarcode),
@@ -160,14 +186,81 @@ class _HomeScreen extends State<HomeScreen> {
               }
 
               if (_barcode != "") {
-                Navigator.push(
-                    context,
-                    buildPageWithSlideTransition(
-                        context: context,
-                        screen: ProductScreen(
-                            barcode: _barcode,
-                            setProduct: addNewProduct,
-                            setKey: setKey)));
+                buildLoading(context);
+
+                DatabaseReference databaseReference =
+                    FirebaseDatabase.instance.ref().child('products');
+
+                bool addedProduct = false;
+
+                databaseReference
+                    .orderByChild('Barcode')
+                    .equalTo(_barcode)
+                    .onValue
+                    .listen((event) {
+                  if (!addedProduct) {
+                    addedProduct = true;
+
+                    bool foundValues = false;
+
+                    String _productKey = "",
+                        _name = "",
+                        _category = "",
+                        _retailer = "",
+                        _unitOfMeasurement = "";
+                    double _units = 0.0, _price = 0.0;
+
+                    DataSnapshot snapshot = event.snapshot;
+
+                    Navigator.pop(context);
+
+                    Map<dynamic, dynamic>? map;
+                    try {
+                      map = snapshot.value as Map<dynamic, dynamic>;
+                    } catch (e) {}
+                    ;
+
+                    map?.forEach((key, value) {
+                      // Display existing record
+
+                      foundValues = true;
+
+                      _productKey = key;
+                      _name = value['Name'];
+                      _category = value['Category'];
+                      _retailer = value['Retailer'];
+                      _units = value['Units'].toDouble();
+                      _unitOfMeasurement = value['UoM'];
+                      _price = value['Price'].toDouble();
+                    });
+                    if (foundValues) {
+                      Navigator.push(
+                          context,
+                          buildPageWithSlideTransition(
+                              context: context,
+                              screen: ProductScreen(
+                                  productKey: _productKey,
+                                  barcode: _barcode,
+                                  productName: _name,
+                                  category: _category,
+                                  retailer: _retailer,
+                                  units: _units,
+                                  unitOfMeasurement: _unitOfMeasurement,
+                                  price: _price,
+                                  setProduct: setProduct,
+                                  setKey: (String) {})));
+                    } else {
+                      Navigator.push(
+                          context,
+                          buildPageWithSlideTransition(
+                              context: context,
+                              screen: ProductScreen(
+                                  barcode: _barcode,
+                                  setProduct: setProduct,
+                                  setKey: setKey)));
+                    }
+                  }
+                });
               }
             },
             child: const Icon(Icons.add),

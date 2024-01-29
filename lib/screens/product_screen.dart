@@ -17,7 +17,8 @@ class ProductScreen extends StatefulWidget {
   double units;
   String unitOfMeasurement;
   double price;
-  void Function(String, String, String, double, String, double) setProduct;
+  void Function(String, String, String, String, double, String, double)
+      setProduct;
   void Function(String) setKey;
 
   ProductScreen(
@@ -161,10 +162,12 @@ class _ProductScreen extends State<ProductScreen> {
                           widget.price);
 
                       widget.setKey(key);
+                      widget.productKey = key;
                     } else {
                       // Update existing product
                       updateProduct(
                           widget.productKey,
+                          widget.barcode,
                           widget.productName,
                           widget.category,
                           widget.retailer,
@@ -174,6 +177,7 @@ class _ProductScreen extends State<ProductScreen> {
                     }
 
                     widget.setProduct(
+                        widget.productKey,
                         widget.productName,
                         widget.category,
                         widget.retailer,

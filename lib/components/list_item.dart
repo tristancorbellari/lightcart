@@ -38,8 +38,8 @@ class ListItem extends StatefulWidget {
 }
 
 class _ListItem extends State<ListItem> {
-  void updateProduct(String productName, String category, String retailer,
-      double units, String unitOfMeasurement, double price) {
+  void updateProduct(String productKey, String productName, String category,
+      String retailer, double units, String unitOfMeasurement, double price) {
     setState(() {
       widget.productName = productName;
       widget.category = category;
